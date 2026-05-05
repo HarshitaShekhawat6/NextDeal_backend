@@ -7,8 +7,8 @@ const db    = require("../config/db");
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(
-      require("./firebase-service-account.json")
-    ),
+  JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+),
   });
 }
 
