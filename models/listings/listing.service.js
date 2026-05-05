@@ -34,7 +34,7 @@ const getAllListings = async ({ category, search, filter, page, limit }) => {
      LEFT JOIN listing_images li ON li.listing_id = l.id
      LEFT JOIN users u ON u.id = l.user_id
      WHERE ${conditions.join(" AND ")}
-     GROUP BY l.id ORDER BY l.created_at DESC LIMIT ? OFFSET ?`,
+     GROUP BY l.id, l.user_id, l.title, l.price, l.description, l.\`condition\`, l.location, l.category_slug, l.status, l.created_at, u.name, u.phone, u.image ORDER BY l.created_at DESC LIMIT ? OFFSET ?`,
     [...values, limitNum, offset]
   );
   return { rows: rows.map(formatListing), page: pageNum, count: rows.length };
@@ -120,3 +120,4 @@ const createListing = async ({ userId, title, price, description, condition, loc
 };
 
 module.exports = { getAllListings, getListingById, getMyListings, markListingAsSold, createListing };
+

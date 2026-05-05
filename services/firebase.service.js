@@ -5,10 +5,12 @@ const db    = require("../config/db");
 
 // ── Init Firebase Admin once 
 if (!admin.apps.length) {
+  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT 
+    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+    : require("./firebase-service-account.json.json");
+    
   admin.initializeApp({
-    credential: admin.credential.cert(
-  JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-),
+    credential: admin.credential.cert(serviceAccount),
   });
 }
 
