@@ -83,7 +83,9 @@ const getConversationsByUserId = async (userId) => {
      JOIN users buyer    ON buyer.id  = c.buyer_id
      JOIN users seller   ON seller.id = c.seller_id
      WHERE c.buyer_id = ? OR c.seller_id = ?
-     GROUP BY c.id
+     GROUP BY c.id, c.listing_id, c.buyer_id, c.seller_id,
+              l.title, l.price, buyer.name, buyer.image,
+              seller.name, seller.image
      ORDER BY last_message_at DESC`,
     [userId, userId, userId]
   );
