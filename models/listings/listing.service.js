@@ -28,7 +28,7 @@ const getAllListings = async ({ category, search, filter, page, limit }) => {
   if (filter === "recent") conditions.push("l.created_at >= DATE_SUB(NOW(), INTERVAL 10 DAY)");
 
   const [rows] = await db.query(
-    `SELECT l.*, GROUP_CONCAT(li.image_url) AS images,
+    `SELECT l.*, GROUP_CONCAT(DISTINCT li.image_url ORDER BY li.id ASC) AS images,
        u.name AS seller_name, u.phone AS seller_phone, u.image AS seller_avatar
      FROM listings l
      LEFT JOIN listing_images li ON li.listing_id = l.id
@@ -36,6 +36,7 @@ const getAllListings = async ({ category, search, filter, page, limit }) => {
      WHERE ${conditions.join(" AND ")}
      GROUP BY l.id, l.user_id, l.title, l.price, l.description, l.\`condition\`, l.location, l.category_slug, l.status, l.created_at, u.name, u.phone, u.image ORDER BY l.created_at DESC LIMIT ? OFFSET ?`,
     [...values, limitNum, offset]
+    
   );
   return { rows: rows.map(formatListing), page: pageNum, count: rows.length };
 };
@@ -43,7 +44,7 @@ const getAllListings = async ({ category, search, filter, page, limit }) => {
 // ── GET SINGLE ────────────────────────────────────────────────────────────────
 const getListingById = async (id) => {
   const [rows] = await db.query(
-    `SELECT l.*, GROUP_CONCAT(li.image_url) AS images,
+    `SELECT l.*, GROUP_CONCAT(DISTINCT li.image_url ORDER BY li.id ASC) AS images,
        u.name AS seller_name, u.phone AS seller_phone, u.image AS seller_avatar
      FROM listings l
      LEFT JOIN listing_images li ON li.listing_id = l.id

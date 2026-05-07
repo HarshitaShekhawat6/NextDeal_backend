@@ -1,4 +1,4 @@
-// src/modules/chat/chat.service.js
+// src/models/chat/chat.service.js
 
 const db = require("../../config/db");
 
@@ -60,7 +60,7 @@ const getConversationsByUserId = async (userId) => {
     `SELECT
        c.id              AS conversation_id,
        c.listing_id,
-       c.buyer_id,
+       c.buyer_id, 
        c.seller_id,
        l.title           AS listing_title,
        l.price           AS listing_price,
@@ -83,6 +83,7 @@ const getConversationsByUserId = async (userId) => {
      JOIN users buyer    ON buyer.id  = c.buyer_id
      JOIN users seller   ON seller.id = c.seller_id
      WHERE c.buyer_id = ? OR c.seller_id = ?
+     GROUP BY c.id
      ORDER BY last_message_at DESC`,
     [userId, userId, userId]
   );
